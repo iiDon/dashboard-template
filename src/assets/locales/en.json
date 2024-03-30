@@ -1,0 +1,52 @@
+{
+  "common": {
+    "dir": "ltr",
+    "Language": "Language",
+    "save": "Save",
+    "back": "Back",
+    "404": "404, Page not found",
+    "main_page": "Home"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "users": "Customers",
+    "logout": "Logout",
+    "conferences": "Conferences"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "of": "of"
+  },
+  "avatar": {
+    "myAccount": "My Account",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Enter your email below to create your account",
+      "signIn": "Sign In",
+      "email": "Email",
+      "password": "Password",
+      "rememberMe": "Remember Me",
+      "forgotPassword": "Forgot Password?",
+      "dontHaveAccount": "Don't have an account?",
+      "success": "You have successfully logged in"
+    },
+    "signUp": {
+      "title": "Enter your email below to create account",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "alreadyHaveAccount": "Already have an account?",
+      "signUp": "Sign Up"
+    },
+    "errors": {
+      "email": "Please enter a valid email address",
+      "password": "Please enter a valid password",
+      "error": "Error"
+    },
+    "loggedOut": "You have successfully logged out"
+  }
+}

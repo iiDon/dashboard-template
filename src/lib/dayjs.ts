@@ -1,0 +1,10 @@
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import tz from "dayjs/plugin/timezone";
+import updateLocale from "dayjs/plugin/updateLocale";
+import isBetween from "dayjs/plugin/isBetween";
+dayjs.extend(utc);
+dayjs.extend(tz);
+dayjs.extend(updateLocale);
+dayjs.extend(isBetween);
+dayjs.tz.setDefault("Asia/Riyadh");
