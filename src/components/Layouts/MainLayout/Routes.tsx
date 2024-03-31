@@ -1,5 +1,5 @@
+import Icon from "@/components/ui/icon";
 import { IRoute } from "@/types/types";
-import { HomeIcon, PersonIcon, CalendarIcon } from "@radix-ui/react-icons";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -9,18 +9,18 @@ export const useSideBarRoutes = () => {
     {
       path: "/dashboard/",
       name: t("sidebar.dashboard"),
-      icon: <HomeIcon />,
+      icon: <Icon name="home" />,
     },
     {
       path: "/dashboard/users",
       name: t("sidebar.users"),
-      icon: <PersonIcon />,
+      icon: <Icon name="person-standing" />,
     },
 
     {
-      path: "/dashboard/events",
-      name: t("sidebar.conferences"),
-      icon: <CalendarIcon />,
+      path: "/dashboard/example",
+      name: t("sidebar.users"),
+      icon: <Icon name="calendar" />,
     },
   ]);
 
@@ -29,18 +29,18 @@ export const useSideBarRoutes = () => {
       {
         path: "/dashboard/",
         name: t("sidebar.dashboard"),
-        icon: <HomeIcon />,
+        icon: <Icon name="home" />,
       },
       {
         path: "/dashboard/users",
         name: t("sidebar.users"),
-        icon: <PersonIcon />,
+        icon: <Icon name="person-standing" />,
       },
 
       {
-        path: "/dashboard/events",
-        name: t("sidebar.conferences"),
-        icon: <CalendarIcon />,
+        path: "/dashboard/example",
+        name: t("sidebar.example"),
+        icon: <Icon name="calendar" />,
       },
     ]);
   }, [t]);

@@ -1,6 +1,5 @@
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetTrigger,
@@ -14,6 +13,7 @@ import { t } from "i18next";
 import { useSideBarRoutes } from "./Routes";
 import { Button } from "@/components/ui/button";
 import useSidebarStore from "@/store/sidebar";
+import React from "react";
 
 export const Logo = () => {
   return (
@@ -30,9 +30,9 @@ const Drawer = () => {
   const location = useLocation();
   const { ROUTES } = useSideBarRoutes();
   const { isSidebarOpen, setIsSidebarOpen } = useSidebarStore((state) => state);
-
+  const [open, setOpen] = React.useState(false);
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger>
         <Button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -40,35 +40,35 @@ const Drawer = () => {
           className="p-2.5"
           asChild
         >
-          <HamburgerMenuIcon className="w-full text-primary-foreground" />
+          <HamburgerMenuIcon className="w-full " />
         </Button>
       </SheetTrigger>
       <SheetContent
         dir={t("common.dir") || "rtl"}
         side={t("common.dir") === "rtl" ? "right" : "left"}
-        className="text-primary-foreground justify-between flex flex-col bg-primary p-4 h-full"
+        className=" justify-between flex flex-col bg-primary p-4 h-full"
       >
         <div>
           <Logo />
 
-          <SheetDescription className="overflow-y-auto h-screen">
+          <SheetDescription className="overflow-y-auto h-screen flex flex-col gap-y-4">
             {ROUTES.map((route) => {
               return (
-                <SheetClose asChild key={route.path}>
+                <Link key={route.path} to={route.path}>
                   <Button
+                    onClick={() => setOpen(false)}
+                    size={"lg"}
                     className={cn(
-                      "flex mb-4 hover:bg-darkPrimary text-white hover:text-white items-center justify-start gap-x-2 w-full",
-                      location.pathname === route.path && "bg-darkPrimary "
+                      "flex px-4 items-center gap-x-4 justify-start shadow-none w-full"
                     )}
-                    variant="ghost"
-                    asChild
+                    variant={
+                      location.pathname === route.path ? "secondary" : "default"
+                    }
                   >
-                    <Link to={route.path}>
-                      {route.icon}
-                      {route.name}
-                    </Link>
+                    <span>{route.icon}</span>
+                    <span>{route.name}</span>
                   </Button>
-                </SheetClose>
+                </Link>
               );
             })}
           </SheetDescription>

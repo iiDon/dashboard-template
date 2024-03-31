@@ -1,8 +1,7 @@
-import { useTranslation } from "react-i18next";
+import { Navigate } from "react-router-dom";
 
-function App() {
-  const { t } = useTranslation();
-  return <>{t("common.dir")}</>;
-}
+const App = () => {
+  return <Navigate to="/dashboard" />;
+};
 
 export default App;

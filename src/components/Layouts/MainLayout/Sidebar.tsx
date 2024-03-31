@@ -23,7 +23,7 @@ const Sidebar = () => {
                   }
                   size={"lg"}
                   className={cn(
-                    "flex  items-center justify-start gap-x-2 w-full"
+                    "flex px-4 items-center justify-start gap-x-2 w-full"
                   )}
                 >
                   <ul>{route.icon}</ul>

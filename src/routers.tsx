@@ -5,6 +5,8 @@ import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import MainLayout from "./components/Layouts/MainLayout/MainLayout";
 import App from "./App";
+import Example from "./pages/Example/page";
+import Main from "./pages/dashboard/Main";
 
 export const router = createBrowserRouter([
   {
@@ -26,13 +28,22 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/dashboard/",
-        element: <App />,
+        element: <Main />,
       },
       {
-        path: "*",
+        path: "/dashboard/example",
+        element: <Example />,
+      },
+      {
+        path: "dashboard/*",
         element: <Error />,
       },
     ],
+  },
+
+  {
+    path: "/",
+    element: <App />,
   },
 
   {

@@ -11,3 +11,18 @@ export interface IZodError {
     message: string;
   }[];
 }
+
+export interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+  phone: string;
+}
+
+export interface IUsersRequest {
+  users: IUser[];
+  total: number;
+}

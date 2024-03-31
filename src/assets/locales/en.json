@@ -1,17 +1,17 @@
 {
   "common": {
+    "404": "404, Page not found",
     "dir": "ltr",
     "Language": "Language",
     "save": "Save",
     "back": "Back",
-    "404": "404, Page not found",
     "main_page": "Home"
   },
   "sidebar": {
     "dashboard": "Dashboard",
     "users": "Customers",
     "logout": "Logout",
-    "conferences": "Conferences"
+    "example": "Example"
   },
   "pagination": {
     "previous": "Previous",
@@ -48,5 +48,8 @@
       "error": "Error"
     },
     "loggedOut": "You have successfully logged out"
+  },
+  "translation": {
+    "sidebar": {}
   }
 }
