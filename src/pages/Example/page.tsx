@@ -1,4 +1,5 @@
 import { columns } from "@/components/example/columns";
+import Loading from "@/components/ui/Loading";
 import { Button } from "@/components/ui/button";
 import { DataTable as ExampleTable } from "@/components/ui/data-table";
 import { IUsersRequest } from "@/types/types";
@@ -8,25 +9,25 @@ import { useSearchParams } from "react-router-dom";
 
 const Example = () => {
   // get query params
-  let [searchParams, setSearchParams] = useSearchParams({
-    limit: "10",
-    page: "1",
-  });
+  let [searchParams, setSearchParams] = useSearchParams();
 
-  useEffect(() => {
-    if (searchParams) {
-      // set query params
-      setSearchParams(searchParams);
-    }
-  }, [searchParams]);
-
-  const { data, isLoading, hasNextPage, fetchNextPage } = useInfiniteQuery({
+  const {
+    data,
+    isLoading,
+    hasNextPage,
+    hasPreviousPage,
+    isFetching,
+    fetchNextPage,
+    fetchPreviousPage,
+  } = useInfiniteQuery({
     queryKey: ["posts", searchParams.toString()],
-    queryFn: async ({ pageParam = 1 }: { pageParam: number }) => {
-      searchParams.set("page", pageParam.toString());
-      console.log(searchParams.toString());
+    queryFn: async ({ pageParam }: { pageParam: number }) => {
+      console.log("Start fetching data");
+      console.log(pageParam);
+      setSearchParams({ page: pageParam.toString(), limit: "10" });
+      const param = searchParams.toString() || "page=1&limit=10";
       const response = await fetch(
-        `http://localhost:4000/user?${searchParams.toString()}`,
+        `http://localhost:4000/user?${param}`,
 
         {
           headers: {
@@ -39,39 +40,45 @@ const Example = () => {
 
       return data;
     },
-    initialPageParam: 1,
+    initialPageParam: searchParams.get("page")
+      ? Number(searchParams.get("page"))
+      : 1,
     getNextPageParam: (lastPage) => {
-      // data shap has only {total: number, users: []}
-      const { total } = lastPage;
-      const totalPages = Math.ceil(total / 10);
-      const currentPage = Number(searchParams.get("page"));
-      if (currentPage < totalPages) {
-        return currentPage + 1;
+      if (
+        lastPage.total >=
+        Number(searchParams.get("limit")) * Number(searchParams.get("page"))
+      ) {
+        console.log("Next page", Number(searchParams.get("page")));
+        return Number(searchParams.get("page")) + 1;
       }
-      return undefined;
     },
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (!data) return <Loading />;
 
-  if (!data) return <div>Error</div>;
-  console.log(data);
   return (
-    <div className="flex flex-col gap-4 shadow-2xl p-4">
-      {/* <ExampleTable columns={columns} data={data?.posts} /> */}
-      {data?.pages?.map((users) =>
-        users.users.map((user) => (
-          <div key={user.id}>
-            <span>{user.phone}</span>
-          </div>
-        ))
-      )}
+    <div className="flex flex-col gap-4 shadow-lg border rounded-lg p-4 mb-8">
+      <ExampleTable
+        columns={columns}
+        // send data depend on page
+        data={data.pages.map((page) => page.users)}
+        limit={10}
+        pageIndex={Number(searchParams.get("page"))}
+        fetchNextPage={fetchNextPage}
+        fetchPreviousPage={fetchPreviousPage}
+        hasNextPage={hasNextPage}
+        hasPreviousPage={hasPreviousPage}
+        isLoading={isLoading || isFetching}
+      />
 
-      <Button disabled={!hasNextPage} onClick={() => fetchNextPage()}>
+      <Button
+        disabled={!hasNextPage}
+        variant="outline"
+        size="sm"
+        onClick={() => fetchNextPage()}
+      >
         Next
       </Button>
-
-      <Button>Pres</Button>
     </div>
   );
 };

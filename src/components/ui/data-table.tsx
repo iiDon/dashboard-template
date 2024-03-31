@@ -26,11 +26,25 @@ import { useTranslation } from "react-i18next";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  pageIndex?: number;
+  limit?: number;
+  isLoading?: boolean;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  fetchNextPage: () => void;
+  fetchPreviousPage: () => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  limit,
+  pageIndex,
+  fetchNextPage,
+  fetchPreviousPage,
+  hasNextPage,
+  hasPreviousPage,
+  isLoading,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const { t } = useTranslation();
@@ -41,8 +55,16 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onRowSelectionChange: setRowSelection,
+    manualPagination: true,
+    pageCount: Math.ceil(data.length / (limit || 10)),
+    state: {
+      rowSelection,
+      pagination: {
+        pageIndex: pageIndex || 1,
+        pageSize: limit || 10,
+      },
+    },
   });
-  const isLoading = false;
   return (
     <div>
       <div className="rounded-md border p-4">
@@ -117,14 +139,25 @@ export function DataTable<TData, TValue>({
       </div>
 
       <div className="flex justify-center items-center gap-x-2 py-4">
-        <Button variant="outline" size="sm">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => fetchPreviousPage()}
+          disabled={isLoading || !hasPreviousPage}
+        >
           {t("pagination.previous")}
         </Button>
         <span>
           {table.getState().pagination.pageIndex} {t("pagination.of")}{" "}
+          {Math.ceil(data.length / (limit || 10)) + 1}
         </span>
 
-        <Button variant="outline" size="sm">
+        <Button
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage || isLoading}
+          variant="outline"
+          size="sm"
+        >
           {t("pagination.next")}
         </Button>
       </div>

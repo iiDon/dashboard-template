@@ -8,7 +8,7 @@ interface ProtectedRoutesProps {
 const ProtectedRoutes = ({ children }: ProtectedRoutesProps) => {
   const [getCookies] = useCookies(["jwt"]);
 
-  if (getCookies.jwt) return <Navigate to="/auth/login" />;
+  // if (getCookies.jwt) return <Navigate to="/auth/login" />;
 
   return children;
 };

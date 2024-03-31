@@ -49,14 +49,14 @@ export const columns: ColumnDef<IUser>[] = [
         to={`/dashboard/events/${row.original.id}`}
         className="cursor-pointer"
       >
-        {row.original.id}
+        {row.index}
       </Link>
     ),
   },
   {
     accessorKey: "id",
     header: "المعرف",
-    cell: ({ row }) => <span>{row.original.id}</span>,
+    cell: ({ row }) => <span>{}</span>,
   },
   {
     accessorKey: "title",
@@ -66,7 +66,7 @@ export const columns: ColumnDef<IUser>[] = [
   {
     accessorKey: "body",
     header: "المحتوى",
-    cell: ({ row }) => <span>{row.original.email.slice(0, 10)}</span>,
+    cell: ({ row }) => <span>{row.original.email}</span>,
   },
   {
     id: "actions",
