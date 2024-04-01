@@ -1,15 +1,12 @@
-"use client";
-
+import React from "react";
 import { Button } from "@/components/ui/button";
-
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  useReactTable,
   getPaginationRowModel,
+  useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -18,33 +15,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
 import { Skeleton } from "./skeleton";
 import { cn } from "@/lib/shadcn";
 import { useTranslation } from "react-i18next";
+import { useInfiniteQuery } from "react-query";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  pageIndex?: number;
-  limit?: number;
-  isLoading?: boolean;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
   fetchNextPage: () => void;
   fetchPreviousPage: () => void;
+  data: TData[];
+  isLoading: boolean;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
-  data,
-  limit,
-  pageIndex,
   fetchNextPage,
   fetchPreviousPage,
+  data,
+  isLoading,
   hasNextPage,
   hasPreviousPage,
-  isLoading,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const { t } = useTranslation();
@@ -56,15 +49,14 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onRowSelectionChange: setRowSelection,
     manualPagination: true,
-    pageCount: Math.ceil(data.length / (limit || 10)),
     state: {
-      rowSelection,
       pagination: {
-        pageIndex: pageIndex || 1,
-        pageSize: limit || 10,
+        pageIndex: 1,
+        pageSize: 10,
       },
     },
   });
+
   return (
     <div>
       <div className="rounded-md border p-4">
@@ -142,21 +134,19 @@ export function DataTable<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => fetchPreviousPage()}
-          disabled={isLoading || !hasPreviousPage}
+          onClick={fetchPreviousPage}
+          disabled={!hasPreviousPage}
         >
           {t("pagination.previous")}
         </Button>
         <span>
           {table.getState().pagination.pageIndex} {t("pagination.of")}{" "}
-          {Math.ceil(data.length / (limit || 10)) + 1}
         </span>
-
         <Button
-          onClick={() => fetchNextPage()}
-          disabled={!hasNextPage || isLoading}
           variant="outline"
           size="sm"
+          onClick={fetchNextPage}
+          disabled={!hasNextPage}
         >
           {t("pagination.next")}
         </Button>

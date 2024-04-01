@@ -8,9 +8,6 @@ import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const Example = () => {
-  // get query params
-  let [searchParams, setSearchParams] = useSearchParams();
-
   const {
     data,
     isLoading,
@@ -20,14 +17,12 @@ const Example = () => {
     fetchNextPage,
     fetchPreviousPage,
   } = useInfiniteQuery({
-    queryKey: ["posts", searchParams.toString()],
+    queryKey: ["posts"],
     queryFn: async ({ pageParam }: { pageParam: number }) => {
       console.log("Start fetching data");
       console.log(pageParam);
-      setSearchParams({ page: pageParam.toString(), limit: "10" });
-      const param = searchParams.toString() || "page=1&limit=10";
       const response = await fetch(
-        `http://localhost:4000/user?${param}`,
+        `http://localhost:4000/user?page=${pageParam}&limit=10`,
 
         {
           headers: {
@@ -40,45 +35,28 @@ const Example = () => {
 
       return data;
     },
-    initialPageParam: searchParams.get("page")
-      ? Number(searchParams.get("page"))
-      : 1,
-    getNextPageParam: (lastPage) => {
-      if (
-        lastPage.total >=
-        Number(searchParams.get("limit")) * Number(searchParams.get("page"))
-      ) {
-        console.log("Next page", Number(searchParams.get("page")));
-        return Number(searchParams.get("page")) + 1;
-      }
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = lastPage.page + 1;
+      return nextPage <= Math.ceil(lastPage.total / 10) ? nextPage : undefined;
     },
   });
 
   if (!data) return <Loading />;
 
+  console.log(data);
+
   return (
     <div className="flex flex-col gap-4 shadow-lg border rounded-lg p-4 mb-8">
       <ExampleTable
         columns={columns}
-        // send data depend on page
-        data={data.pages.map((page) => page.users)}
-        limit={10}
-        pageIndex={Number(searchParams.get("page"))}
-        fetchNextPage={fetchNextPage}
-        fetchPreviousPage={fetchPreviousPage}
+        data={data?.pages?.flatMap((page) => page.users) ?? []}
+        isLoading={isLoading}
         hasNextPage={hasNextPage}
         hasPreviousPage={hasPreviousPage}
-        isLoading={isLoading || isFetching}
+        fetchNextPage={fetchNextPage}
+        fetchPreviousPage={fetchPreviousPage}
       />
-
-      <Button
-        disabled={!hasNextPage}
-        variant="outline"
-        size="sm"
-        onClick={() => fetchNextPage()}
-      >
-        Next
-      </Button>
     </div>
   );
 };

@@ -25,4 +25,5 @@ export interface IUser {
 export interface IUsersRequest {
   users: IUser[];
   total: number;
+  page: number;
 }
