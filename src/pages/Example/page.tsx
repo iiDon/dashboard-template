@@ -4,10 +4,22 @@ import { Button } from "@/components/ui/button";
 import { DataTable as ExampleTable } from "@/components/ui/data-table";
 import { IUsersRequest } from "@/types/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 const Example = () => {
+  const [pagination, setPagination] = useState({
+    pageIndex: 1, //initial page index
+    pageSize: 10, //default page size
+  });
+  let [_, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (pagination.pageIndex) {
+      setSearchParams({ page: pagination.pageIndex.toString(), limit: "10" });
+    }
+  }, [pagination.pageIndex]);
+
   const {
     data,
     isLoading,
@@ -40,22 +52,31 @@ const Example = () => {
       const nextPage = lastPage.page + 1;
       return nextPage <= Math.ceil(lastPage.total / 10) ? nextPage : undefined;
     },
+    getPreviousPageParam: (firstPage, allPages) => {
+      const previousPage = allPages[allPages.length - 1].page - 1;
+      if (previousPage > 0) {
+        return previousPage;
+      }
+
+      return undefined;
+    },
   });
 
   if (!data) return <Loading />;
-
-  console.log(data);
 
   return (
     <div className="flex flex-col gap-4 shadow-lg border rounded-lg p-4 mb-8">
       <ExampleTable
         columns={columns}
-        data={data?.pages?.flatMap((page) => page.users) ?? []}
-        isLoading={isLoading}
+        data={data?.pages[data.pages.length - 1].users ?? []}
+        isLoading={isLoading || isFetching}
         hasNextPage={hasNextPage}
         hasPreviousPage={hasPreviousPage}
         fetchNextPage={fetchNextPage}
         fetchPreviousPage={fetchPreviousPage}
+        rowCount={data?.pages[0].total}
+        pagination={pagination}
+        setPagination={setPagination}
       />
     </div>
   );

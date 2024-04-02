@@ -1,10 +1,9 @@
-import React from "react";
+import { Dispatch, SetStateAction } from "react";
 import { Button } from "@/components/ui/button";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import {
@@ -18,7 +17,6 @@ import {
 import { Skeleton } from "./skeleton";
 import { cn } from "@/lib/shadcn";
 import { useTranslation } from "react-i18next";
-import { useInfiniteQuery } from "react-query";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -28,6 +26,17 @@ interface DataTableProps<TData, TValue> {
   isLoading: boolean;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
+  rowCount?: number;
+  pagination?: {
+    pageIndex: number;
+    pageSize: number;
+  };
+  setPagination?: Dispatch<
+    SetStateAction<{
+      pageIndex: number;
+      pageSize: number;
+    }>
+  >;
 }
 
 export function DataTable<TData, TValue>({
@@ -38,22 +47,21 @@ export function DataTable<TData, TValue>({
   isLoading,
   hasNextPage,
   hasPreviousPage,
+  rowCount,
+  pagination,
+  setPagination,
 }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({});
   const { t } = useTranslation();
 
   const table = useReactTable({
-    data,
     columns,
+    data,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onRowSelectionChange: setRowSelection,
     manualPagination: true,
+    rowCount: rowCount,
+    onPaginationChange: setPagination,
     state: {
-      pagination: {
-        pageIndex: 1,
-        pageSize: 10,
-      },
+      pagination,
     },
   });
 
@@ -134,19 +142,28 @@ export function DataTable<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          onClick={fetchPreviousPage}
-          disabled={!hasPreviousPage}
+          onClick={() => {
+            fetchPreviousPage();
+            table.previousPage();
+          }}
+          disabled={!hasPreviousPage || isLoading}
         >
           {t("pagination.previous")}
         </Button>
         <span>
           {table.getState().pagination.pageIndex} {t("pagination.of")}{" "}
+          {rowCount
+            ? Math.ceil(rowCount / table.getState().pagination.pageSize)
+            : 0}
         </span>
         <Button
           variant="outline"
           size="sm"
-          onClick={fetchNextPage}
-          disabled={!hasNextPage}
+          onClick={() => {
+            fetchNextPage();
+            table.nextPage();
+          }}
+          disabled={!hasNextPage || isLoading}
         >
           {t("pagination.next")}
         </Button>
