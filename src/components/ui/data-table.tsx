@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   ColumnDef,
@@ -18,6 +18,7 @@ import { Skeleton } from "./skeleton";
 import { cn } from "@/lib/shadcn";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
+import { Input } from "./input";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,6 +42,7 @@ export function DataTable<TData, TValue>({
     pageIndex: Number(searchParams.get("page")) || 1,
     pageSize: Number(searchParams.get("limit")) || 10,
   });
+  const [search, setSearch] = useState(searchParams.get("search") || "");
   const table = useReactTable({
     columns,
     data,
@@ -58,12 +60,46 @@ export function DataTable<TData, TValue>({
       setSearchParams({
         page: String(pagination.pageIndex),
         limit: String(pagination.pageSize),
+        search: search,
       });
     }
   }, [pagination]);
 
   return (
     <div>
+      <div className="flex items-center  gap-2">
+        <Input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="p-4 my-4 sm:w-1/2 w-full"
+          placeholder="البحث..."
+        />
+        <Button
+          onClick={() => {
+            setSearchParams({
+              page: String(pagination.pageIndex),
+              limit: String(pagination.pageSize),
+              search: search,
+            });
+
+            table.setPageIndex(1);
+          }}
+        >
+          بحث
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => {
+            setSearch("");
+            setSearchParams({
+              page: String(pagination.pageIndex),
+              limit: String(pagination.pageSize),
+            });
+          }}
+        >
+          إلغاء
+        </Button>
+      </div>
       <div className="rounded-md border p-4">
         <Table>
           <TableHeader>
