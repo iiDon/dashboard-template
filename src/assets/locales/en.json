@@ -16,7 +16,10 @@
   "pagination": {
     "previous": "Previous",
     "next": "Next",
-    "of": "of"
+    "of": "of",
+    "search": "Search",
+    "cancel": "Cancel",
+    "perPage": "Per Page"
   },
   "avatar": {
     "myAccount": "My Account",

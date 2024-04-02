@@ -12,6 +12,7 @@ const Example = () => {
     queryFn: () =>
       getUsers(
         searchParams.get("page") || "1",
+        searchParams.get("limit") || "10",
         searchParams.get("search") || undefined
       ),
     placeholderData: keepPreviousData,

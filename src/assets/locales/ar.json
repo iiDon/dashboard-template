@@ -16,7 +16,10 @@
   "pagination": {
     "previous": "السابق",
     "next": "التالي",
-    "of": "من"
+    "of": "من",
+    "search": "بحث",
+    "cancel": "إلغاء",
+    "perPage": "عرض لكل صفحة"
   },
   "avatar": {
     "myAccount": "حسابي",

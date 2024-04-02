@@ -4,6 +4,10 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    chunkSizeWarningLimit: 1600,
+    emptyOutDir: false,
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

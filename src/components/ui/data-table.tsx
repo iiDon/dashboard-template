@@ -60,35 +60,44 @@ export function DataTable<TData, TValue>({
       setSearchParams({
         page: String(pagination.pageIndex),
         limit: String(pagination.pageSize),
-        search: search,
       });
+
+      if (search) {
+        setSearchParams({
+          page: String(pagination.pageIndex),
+          limit: String(pagination.pageSize),
+          search: search,
+        });
+      }
     }
   }, [pagination]);
 
   return (
     <div>
-      <div className="flex items-center  gap-2">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          setPagination((prev) => ({
+            ...prev,
+            pageIndex: 1,
+          }));
+
+          setSearchParams({
+            page: String(pagination.pageIndex),
+            limit: String(pagination.pageSize),
+            search: search,
+          });
+        }}
+        className="flex items-center  gap-2"
+      >
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="p-4 my-4 sm:w-1/2 w-full"
-          placeholder="البحث..."
+          placeholder={t("pagination.search")}
         />
+        <Button type="submit">{t("pagination.search")}</Button>
         <Button
-          onClick={() => {
-            setSearchParams({
-              page: String(pagination.pageIndex),
-              limit: String(pagination.pageSize),
-              search: search,
-            });
-
-            table.setPageIndex(1);
-          }}
-        >
-          بحث
-        </Button>
-        <Button
-          variant="outline"
           onClick={() => {
             setSearch("");
             setSearchParams({
@@ -96,10 +105,12 @@ export function DataTable<TData, TValue>({
               limit: String(pagination.pageSize),
             });
           }}
+          type="reset"
+          variant="outline"
         >
-          إلغاء
+          {t("pagination.cancel")}
         </Button>
-      </div>
+      </form>
       <div className="rounded-md border p-4">
         <Table>
           <TableHeader>
