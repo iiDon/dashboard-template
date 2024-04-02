@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   ColumnDef,
@@ -17,42 +17,30 @@ import {
 import { Skeleton } from "./skeleton";
 import { cn } from "@/lib/shadcn";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  fetchNextPage: () => void;
-  fetchPreviousPage: () => void;
+
   data: TData[];
   isLoading: boolean;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  rowCount?: number;
-  pagination?: {
-    pageIndex: number;
-    pageSize: number;
-  };
-  setPagination?: Dispatch<
-    SetStateAction<{
-      pageIndex: number;
-      pageSize: number;
-    }>
-  >;
+
+  rowCount: number;
 }
 
 export function DataTable<TData, TValue>({
   columns,
-  fetchNextPage,
-  fetchPreviousPage,
+
   data,
   isLoading,
-  hasNextPage,
-  hasPreviousPage,
   rowCount,
-  pagination,
-  setPagination,
 }: DataTableProps<TData, TValue>) {
   const { t } = useTranslation();
-
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [pagination, setPagination] = useState({
+    pageIndex: Number(searchParams.get("page")) || 1,
+    pageSize: Number(searchParams.get("limit")) || 10,
+  });
   const table = useReactTable({
     columns,
     data,
@@ -64,6 +52,15 @@ export function DataTable<TData, TValue>({
       pagination,
     },
   });
+
+  useEffect(() => {
+    if (searchParams.get("page") !== String(pagination.pageIndex)) {
+      setSearchParams({
+        page: String(pagination.pageIndex),
+        limit: String(pagination.pageSize),
+      });
+    }
+  }, [pagination]);
 
   return (
     <div>
@@ -142,11 +139,13 @@ export function DataTable<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => {
-            fetchPreviousPage();
-            table.previousPage();
-          }}
-          disabled={!hasPreviousPage || isLoading}
+          onClick={() =>
+            setPagination((prev) => ({
+              ...prev,
+              pageIndex: prev.pageIndex - 1,
+            }))
+          }
+          disabled={isLoading || pagination.pageIndex === 1}
         >
           {t("pagination.previous")}
         </Button>
@@ -159,11 +158,17 @@ export function DataTable<TData, TValue>({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => {
-            fetchNextPage();
-            table.nextPage();
-          }}
-          disabled={!hasNextPage || isLoading}
+          onClick={() =>
+            setPagination((prev) => ({
+              ...prev,
+              pageIndex: prev.pageIndex + 1,
+            }))
+          }
+          disabled={
+            isLoading ||
+            table.getState().pagination.pageIndex >=
+              Math.ceil(rowCount / pagination.pageSize)
+          }
         >
           {t("pagination.next")}
         </Button>

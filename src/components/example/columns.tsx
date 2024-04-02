@@ -42,31 +42,19 @@ export const columns: ColumnDef<IUser>[] = [
     ),
   },
   {
-    accessorKey: "userId",
-    header: "معرف المستخدم",
-    cell: ({ row }) => (
-      <Link
-        to={`/dashboard/events/${row.original.id}`}
-        className="cursor-pointer"
-      >
-        {row.index}
-      </Link>
-    ),
-  },
-  {
-    accessorKey: "id",
-    header: "المعرف",
-    cell: ({ row }) => <span>{}</span>,
-  },
-  {
-    accessorKey: "title",
-    header: "العنوان",
+    accessorKey: "name",
+    header: "الاسم",
     cell: ({ row }) => <span>{row.original.name}</span>,
   },
   {
-    accessorKey: "body",
-    header: "المحتوى",
-    cell: ({ row }) => <span>{row.original.email}</span>,
+    accessorKey: "phone",
+    header: "رقم الجوال",
+    cell: ({ row }) => <span>{row.original.phone}</span>,
+  },
+  {
+    accessorKey: "createdAt",
+    header: "تاريخ الانشاء",
+    cell: ({ row }) => <span>{row.original.createdAt.split("T")[0]}</span>,
   },
   {
     id: "actions",
