@@ -27,18 +27,20 @@ const MainLayout = () => {
         dir={t("common.dir") || "rtl"}
         className="flex bg-slate-50 h-screen  justify-center"
       >
-        <div className="w-full grid grid-cols-8">
+        <div className="w-full flex">
           <div
             className={cn(
-              "",
-              isSidebarOpen ? "col-span-2 hidden md:block  " : "hidden"
+              "transition-all duration-300 ",
+              isSidebarOpen
+                ? "w-80   hidden sm:block "
+                : "w-20 hidden sm:block justify-center items-center"
             )}
           >
             <Sidebar />
           </div>
           <div
             className={cn(
-              "flex flex-col h-screen",
+              "flex flex-col h-screen w-full",
               isSidebarOpen ? "col-span-8 md:col-span-6" : "col-span-8"
             )}
           >

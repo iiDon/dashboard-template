@@ -1,26 +1,31 @@
 import { cn } from "@/lib/shadcn";
-import { ExitIcon } from "@radix-ui/react-icons";
 import { useTranslation } from "react-i18next";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import useSidebarStore from "@/store/sidebar";
+import Icon from "@/components/ui/icon";
+import { Separator } from "@/components/ui/separator";
 
 const LogoutButton = () => {
   const [isLoading] = React.useState<boolean>(false);
   const { t } = useTranslation();
+  const { isSidebarOpen } = useSidebarStore((state) => state);
 
   const handleLogout = async () => {};
   return (
-    <div className="flex flex-col gap-y-4">
-      <hr />
+    <div>
+      <Separator className="my-4" />
       <Button
         onClick={handleLogout}
-        disabled={isLoading}
-        variant="ghost"
+        variant={"ghost"}
         size={"lg"}
-        className={cn("flex  items-center justify-start gap-x-2")}
+        className={cn(
+          "flex px-4 gap-x-2 w-full",
+          isSidebarOpen ? "justify-start" : "justify-center"
+        )}
       >
-        <ExitIcon />
-        {t("sidebar.logout")}
+        <ul>{<Icon name="log-out" />}</ul>
+        {isSidebarOpen && <span>{t("sidebar.logout")}</span>}
       </Button>
     </div>
   );

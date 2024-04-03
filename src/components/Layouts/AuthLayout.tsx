@@ -5,8 +5,8 @@ import UnprotectedRoutes from "../UnprotectedRoutes";
 const AuthLayout = () => {
   return (
     <UnprotectedRoutes>
-      <div className="flex h-screen w-full flex-col lg:grid lg:grid-cols-2 lg:gap-0 ">
-        <div className="container">
+      <div className="flex h-screen w-full flex-col lg:grid lg:grid-cols-3 lg:gap-0 ">
+        <div className="container  col-start-1 col-end-3">
           <Outlet />
         </div>
         <Banner />

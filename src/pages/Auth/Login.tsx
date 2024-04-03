@@ -12,6 +12,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Language from "@/components/Layouts/MainLayout/Header/Language";
 
 const FormSchema = z.object({
   email: z.string().email({ message: "البريد الإلكتروني غير صالح" }),
@@ -33,6 +34,7 @@ const Login = () => {
 
   return (
     <div className="flex h-screen w-full flex-col justify-center">
+      <Language />
       <div className="flex h-screen flex-1 items-center justify-center">
         <Form {...form}>
           <form
@@ -40,7 +42,7 @@ const Login = () => {
             className="container pb-4 m-4 space-y-12 shadow-lg"
           >
             <div className="space-y-2 text-center">
-              <img src="/Logo/blue.png" alt="" className="m-auto w-44" />
+              <img src="/Logo/bdlue.png" alt="" className="m-auto w-44" />
               <h1 className="text-4xl  font-bold tracking-tighter text-primary">
                 تسجيل الدخول
               </h1>
