@@ -1,8 +1,8 @@
 import { create } from "zustand";
 
 interface SidebarState {
-  isSidebarOpen: Boolean;
-  setIsSidebarOpen: (isSidebarOpen: Boolean) => void;
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: (isSidebarOpen: boolean) => void;
 }
 
 const useSidebarStore = create<SidebarState>((set) => ({

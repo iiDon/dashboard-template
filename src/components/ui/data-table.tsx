@@ -79,7 +79,7 @@ export function DataTable<TData, TValue>({
         });
       }
     }
-  }, [pagination]);
+  }, [pagination, allFilters, searchParams, setSearchParams, filters]);
 
   return (
     <div>

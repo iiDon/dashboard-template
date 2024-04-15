@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 export const API =
   import.meta.env.MODE === "development"
     ? "http://localhost:4000"
-    : "https://api.bluewash.sa";
+    : import.meta.env.VITE_API;
 
 const axiosInstance = axios.create({
   baseURL: API,
@@ -29,7 +29,7 @@ axiosInstance.interceptors.response.use(
       // Optional: Redirect user to login page or perform another action
     }
     return Promise.reject(error);
-  },
+  }
 );
 
 // ============== Send Token with every request ==============
@@ -48,6 +48,6 @@ axiosInstance.interceptors.request.use(
   (error) => {
     // Do something with request error
     return Promise.reject(error);
-  },
+  }
 );
 export default axiosInstance;

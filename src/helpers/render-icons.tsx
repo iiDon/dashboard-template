@@ -14,7 +14,7 @@ export const renderIcon = (name: string, color?: string, hover?: string) => {
         className={cn(
           "h-8 w-8 text-primary",
           color && `text-${color}`,
-          hover && `hover:text-${hover}`,
+          hover && `hover:text-${hover}`
         )}
       />
     );
@@ -25,7 +25,7 @@ export const renderIcon = (name: string, color?: string, hover?: string) => {
         className={cn(
           "h-8 w-8 text-primary",
           color && `text-${color}`,
-          hover && `hover:text-${hover}`,
+          hover && `hover:text-${hover}`
         )}
       />
     );

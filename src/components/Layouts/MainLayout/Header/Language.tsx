@@ -26,7 +26,7 @@ const Language = () => {
     language && i18n.changeLanguage(language);
 
     localStorage.setItem("language", language);
-  }, [language]);
+  }, [language, i18n]);
 
   return (
     <DropdownMenu dir={(t("common.dir") as "rtl" | "ltr") || "rtl"}>

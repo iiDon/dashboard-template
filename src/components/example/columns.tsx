@@ -1,5 +1,3 @@
-"use client";
-
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 
@@ -59,7 +57,7 @@ export const columns: ColumnDef<IUser>[] = [
   {
     id: "actions",
     header: "العمليات",
-    cell: ({ row }) => {
+    cell: function Cell({ row }) {
       const { toast } = useToast();
       const user = row.original;
       return (

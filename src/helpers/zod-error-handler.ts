@@ -1,8 +1,8 @@
 import { IZodError } from "@/types/types";
 import { AxiosError } from "axios";
 
-export function isIZodError(error: any): error is IZodError {
-  return error.code !== undefined;
+export function isIZodError(error: unknown): error is IZodError {
+  return (error as IZodError).code !== undefined;
 }
 
 export const handleZodError = (error: unknown) => {
