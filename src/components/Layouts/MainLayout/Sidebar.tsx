@@ -13,26 +13,34 @@ const Sidebar = () => {
 
   return (
     <div className="bg-primary overflow-x-hidden  text-primary-foreground justify-between flex flex-col  p-4 overflow-y-auto h-screen ">
-      <div>
+      <div className=" h-[78dvh]">
         <Logo />
         <div className="flex overflow-x-hidden overflow-auto h-[78dvh] flex-col gap-y-2">
           {ROUTES.map((route) => {
             return (
-              <Link key={route.path} to={route.path}>
-                <Button
-                  variant={
-                    location.pathname === route.path ? "secondary" : "ghost"
-                  }
-                  size={"lg"}
-                  className={cn(
-                    "flex px-4 gap-x-2 w-full transition-all justify-start duration-300",
-                    isSidebarOpen ? "" : ""
-                  )}
-                >
-                  <ul className="">{route.icon}</ul>
-                  {isSidebarOpen && <span>{route.name}</span>}
-                </Button>
-              </Link>
+              <Button
+                variant={
+                  location.pathname === route.path ? "secondary" : "ghost"
+                }
+                className={cn(
+                  " transition-all w-full px-3 justify-start h-12 duration-300",
+                  isSidebarOpen ? "" : " "
+                )}
+                key={route.path}
+                asChild
+              >
+                <Link to={route.path}>
+                  <span>{route.icon}</span>
+                  <span
+                    className={cn(
+                      "font-bold",
+                      isSidebarOpen ? "ms-2" : "hidden"
+                    )}
+                  >
+                    {route.name}
+                  </span>
+                </Link>
+              </Button>
             );
           })}
         </div>
