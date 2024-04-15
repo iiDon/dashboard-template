@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom/client";
-import "@/assets/styles/globals.css";
+import "@/styles/globals.css";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import "@/lib/i18n.ts";
