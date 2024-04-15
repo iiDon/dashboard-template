@@ -15,6 +15,14 @@ const useAllSearchParams = (): SearchParams => {
     setAllParams(params);
   }, [searchParams]);
 
+  if (!allParams.page) {
+    allParams.page = "1";
+  }
+
+  if (!allParams.limit) {
+    allParams.limit = "10";
+  }
+
   return allParams;
 };
 

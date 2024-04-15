@@ -7,6 +7,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 const Example = () => {
   const allParams = useAllSearchParams();
+
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["example", allParams],
     queryFn: () => getUsers(allParams),
