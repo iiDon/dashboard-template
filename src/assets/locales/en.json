@@ -5,7 +5,8 @@
     "Language": "Language",
     "save": "Save",
     "back": "Back",
-    "main_page": "Home"
+    "main_page": "Home",
+    "filter": "Filter"
   },
   "sidebar": {
     "dashboard": "Dashboard",

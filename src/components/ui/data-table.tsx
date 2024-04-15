@@ -19,19 +19,26 @@ import { cn } from "@/lib/shadcn";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { Input } from "./input";
+import { useAllSearchParams } from "@/hooks/useGetParams";
+import { Label } from "./label";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-
   data: TData[];
   isLoading: boolean;
-
   rowCount: number;
+  filters?: string[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
-
+  filters,
   data,
   isLoading,
   rowCount,
@@ -42,7 +49,9 @@ export function DataTable<TData, TValue>({
     pageIndex: Number(searchParams.get("page")) || 1,
     pageSize: Number(searchParams.get("limit")) || 10,
   });
-  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [allFilters, setAllFilters] = useState<{ [key: string]: string }>({});
+  const allParams = useAllSearchParams();
+
   const table = useReactTable({
     columns,
     data,
@@ -62,11 +71,11 @@ export function DataTable<TData, TValue>({
         limit: String(pagination.pageSize),
       });
 
-      if (search) {
+      if (filters) {
         setSearchParams({
           page: String(pagination.pageIndex),
           limit: String(pagination.pageSize),
-          search: search,
+          ...allFilters,
         });
       }
     }
@@ -74,43 +83,85 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setPagination((prev) => ({
-            ...prev,
-            pageIndex: 1,
-          }));
+      <Accordion type="single" collapsible>
+        <AccordionItem className="" value="item-1">
+          <AccordionTrigger className="border p-4 my-2 rounded-lg">
+            {t("common.filter")}
+          </AccordionTrigger>
+          <AccordionContent className="px-2">
+            <div className="flex flex-wrap flex-shrink ">
+              {filters?.map((filter) => {
+                return (
+                  <form
+                    key={filter}
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      setPagination((prev) => ({
+                        ...prev,
+                        pageIndex: 1,
+                      }));
 
-          setSearchParams({
-            page: String(pagination.pageIndex),
-            limit: String(pagination.pageSize),
-            search: search,
-          });
-        }}
-        className="flex items-center  gap-2"
-      >
-        <Input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="p-4 my-4 sm:w-1/2 w-full"
-          placeholder={t("pagination.search")}
-        />
-        <Button type="submit">{t("pagination.search")}</Button>
-        <Button
-          onClick={() => {
-            setSearch("");
-            setSearchParams({
-              page: String(pagination.pageIndex),
-              limit: String(pagination.pageSize),
-            });
-          }}
-          type="reset"
-          variant="outline"
-        >
-          {t("pagination.cancel")}
-        </Button>
-      </form>
+                      setAllFilters((prev) => ({
+                        ...prev,
+                        [filter]: allFilters[filter],
+                      }));
+
+                      setSearchParams({
+                        page: String(pagination.pageIndex),
+                        limit: String(pagination.pageSize),
+                        ...allFilters,
+                      });
+                    }}
+                  >
+                    <Label>{filter}</Label>
+                    <div className="flex items-center  gap-2">
+                      <Input
+                        value={allFilters[filter] || ""}
+                        onChange={(e) => {
+                          setAllFilters((prev) => ({
+                            ...prev,
+                            [filter]: e.target.value,
+                          }));
+                        }}
+                        className="p-4 my-4 sm:w-1/2 w-full"
+                        placeholder={filter}
+                      />
+                      <Button disabled={!allFilters[filter]} type="submit">
+                        {t("pagination.search")}
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setPagination((prev) => ({
+                            ...prev,
+                            pageIndex: 1,
+                          }));
+                          delete allFilters[filter];
+                          setAllFilters((prev) => {
+                            delete prev[filter];
+                            return prev;
+                          });
+
+                          setSearchParams({
+                            page: String(pagination.pageIndex),
+                            limit: String(pagination.pageSize),
+                            ...allFilters,
+                          });
+                        }}
+                        type="reset"
+                        disabled={!allFilters[filter] || !allParams[filter]}
+                        variant="outline"
+                      >
+                        {t("pagination.cancel")}
+                      </Button>
+                    </div>
+                  </form>
+                );
+              })}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+
       <div className="rounded-md border p-4">
         <Table>
           <TableHeader>
